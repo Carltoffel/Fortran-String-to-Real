@@ -38,14 +38,15 @@ abs_err = str2real_out - formatted_read_out
 rel_err = abs_err / formatted_read_out
 
 write(*,"('input          : ""' g0 '""')") s
+if(abs(rel_err) > 0) then
+    write(*,"('formatted read : ' g0)") formatted_read_out
+    write(*,"('str2real       : ' g0)") str2real_out
+end if
 if(abs(rel_err) > 1d-15) then
     failed_tests = failed_tests + 1
-    write(*,"('formatted read : ' g0)") formatted_read_out
     write(*,"('str2real       : ' g0)") str2real_out
     write(*,"('difference abs : ' g0)") abs_err
     write(*,"('difference rel : ' g0 '%')") rel_err * 100
-else
-    write(*,"('str2real       : ' g0)") str2real_out
 end if
 write(*,*)
 
