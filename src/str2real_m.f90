@@ -47,10 +47,7 @@ equ_s = s
 equ_i = equ_i - digit_0
 
 period_loc   = findloc(equ_i, period, 1)
-!exponent_loc = max( &
-!        findloc(equ_i, char_e,     1, back=.true.), &
-!        findloc(equ_i, char_e_cap, 1, back=.true.))
-exponent_loc = findloc(equ_i, char_e_cap, 1, back=.true.)
+exponent_loc = scan(s, 'eE', back=.true.)
 if(exponent_loc == 0) exponent_loc = len(s) + 1
 if(period_loc   == 0) period_loc   = exponent_loc
 
