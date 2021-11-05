@@ -32,26 +32,24 @@ real(wp) :: r_coefficient
 real(wp) :: r_exponent
 
 integer, parameter :: N = 32
-character(N) :: equ_s
-integer(kind=ikind)    :: equ_i(N)
+character(N) :: factors_char
+integer(kind=ikind)    :: factors(N)
 integer(kind=ikind)    :: mask(N)
 integer      :: period_loc
 integer      :: exponent_loc
 integer      :: mask_from
 integer      :: mask_till
 
+equivalence(factors, factors_char)
+factors_char = s
+factors = factors - digit_0
 
-equivalence(equ_i, equ_s)
-
-equ_s = s
-equ_i = equ_i - digit_0
-
-period_loc   = findloc(equ_i, period, 1)
+period_loc   = findloc(factors, period, 1)
 exponent_loc = scan(s, 'eE', back=.true.)
 if(exponent_loc == 0) exponent_loc = len(s) + 1
 if(period_loc   == 0) period_loc   = exponent_loc
 
-where (0 <= equ_i .and. equ_i <= 9)
+where (0 <= factors .and. factors <= 9)
     mask = 1
 elsewhere
     mask = 0
@@ -61,15 +59,15 @@ mask_from = 18 - period_loc
 mask_till = mask_from + exponent_loc - 2
 
 r_coefficient = sum( &
-        equ_i(:exponent_loc - 1)  * &
+        factors(:exponent_loc - 1)  * &
         base(mask_from:mask_till) * &
         mask(:exponent_loc - 1))
 r_exponent = sum( &
-        equ_i(exponent_loc+1:len(s)) * &
+        factors(exponent_loc+1:len(s)) * &
         mask(exponent_loc+1:len(s))  * &
         base(17-(len(s)-exponent_loc):16))
-if(equ_i(exponent_loc+1) == minus_sign) r_exponent = -r_exponent
-if(equ_i(1)              == minus_sign) r_coefficient = -r_coefficient
+if(factors(exponent_loc+1) == minus_sign) r_exponent    = -r_exponent
+if(factors(1)              == minus_sign) r_coefficient = -r_coefficient
 r = r_coefficient * 10 ** r_exponent
 end function str2real
 
