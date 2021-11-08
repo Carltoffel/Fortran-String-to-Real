@@ -1,4 +1,4 @@
-name = "testing"
+name = "str2real"
 author = "Carl Burkert"
 [build]
 auto-executables = true
